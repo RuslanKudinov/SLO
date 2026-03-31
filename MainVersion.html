@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Оркестр Дмитрия Чиркова</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Montserrat + Arial backup (system fonts) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* RESET + BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #ef4130;        /* основной акцент */
+            --black: #000000;
+            --gray: #b3b3b3;
+            --light-bg: #f9f9f9;           /* светлый фон, чтобы не было темно */
+            --white: #ffffff;
+            --text-dark: #222222;
+            --text-medium: #555555;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 15px 30px rgba(239, 65, 48, 0.12);
+            --border-light: #eaeaea;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--text-dark);
+            font-family: 'Montserrat', Arial, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* типичные шрифтовые классы */
+        .montserrat-light { font-weight: 300; }
+        .montserrat-regular { font-weight: 400; }
+        .montserrat-medium { font-weight: 500; }
+        .montserrat-bold { font-weight: 700; }
+        .arial { font-family: Arial, sans-serif; }
+        .times-italic { font-family: 'Times New Roman', Times, serif; font-style: italic; }
+        .times-bold-italic { font-family: 'Times New Roman', Times, serif; font-weight: 700; font-style: italic; }
+
+        /* Header */
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0.8rem 0;
+            border-bottom: 2px solid var(--primary-red);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--black);
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+        }
+        .logo span { color: var(--primary-red); }
+
+        /* навигация для десктопа, но на мобильных гамбургер */
+        nav {
+            display: block;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        nav a {
+            text-decoration: none;
+            color: var(--black);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+        nav a:hover { color: var(--primary-red); }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            cursor: pointer;
+        }
+
+        /* Mobile nav */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                padding: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+                border-top: 1px solid var(--border-light);
+                z-index: 99;
+            }
+            nav.active {
+                display: block;
+                animation: slideDown 0.3s ease;
+            }
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            nav a {
+                display: block;
+                padding: 0.5rem 0;
+                font-size: 1.2rem;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .header-content {
+                gap: 0.5rem;
+            }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* HERO — привлекающий внимание блок */
+        .hero {
+            background: linear-gradient( rgba(0,0,0,0.2), rgba(0,0,0,0.2) ), url('https://images.unsplash.com/photo-1465847899084-d164df4dedc6?q=80&w=2070&auto=format&fit=crop'); /* фото оркестра */
+            background-size: cover;
+            background-position: center 30%;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .hero-overlay {
+            background-color: rgba(0,0,0,0.3);
+            width: 100%;
+            height: 100%;
+            padding: 4rem 1.5rem;
+        }
+        .hero-title {
+            font-size: clamp(2.2rem, 10vw, 4.5rem);
+            font-weight: 800;
+            font-family: 'Montserrat', Arial, sans-serif;
+            line-height: 1.1;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            margin-bottom: 1rem;
+        }
+        .hero-title span { color: var(--primary-red); }
+        .hero-sub {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 3px black;
+        }
+        .btn-primary {
+            display: inline-block;
+            background: var(--primary-red);
+            color: white;
+            font-weight: 700;
+            padding: 1rem 2.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 15px rgba(239,65,48,0.3);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background: #d32f2f;
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(239,65,48,0.5);
+        }
+
+        /* Общие секции */
+        section {
+            padding: 4rem 0;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 2.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--primary-red);
+        }
+        .section-sub {
+            font-weight: 400;
+            color: var(--text-medium);
+            max-width: 800px;
+            margin-bottom: 3rem;
+        }
+
+        /* Карточки концертов — похожи на карточки товаров */
+        .concerts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .concert-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border: 1px solid var(--border-light);
+        }
+        .concert-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        .concert-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--primary-red);
+        }
+        .concert-content {
+            padding: 1.5rem;
+        }
+        .concert-date {
+            color: var(--primary-red);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        .concert-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .concert-desc {
+            color: var(--text-medium);
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn-small {
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-small i { font-size: 0.9rem; }
+        .btn-small:hover {
+            background: var(--primary-red);
+            color: white;
+        }
+        .btn-small.solid {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+        }
+        .btn-small.solid:hover {
+            background: #d32f2f;
+        }
+
+        /* подробнее о концерте (скрытый блок) */
+        .concert-details {
+            display: none;
+            padding: 1.5rem;
+            background: var(--light-bg);
+            border-top: 1px dashed var(--gray);
+        }
+        .concert-details.active {
+            display: block;
+        }
+        .details-text {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+        .track-list {
+            list-style: none;
+            margin-top: 1rem;
+            border-left: 3px solid var(--primary-red);
+            padding-left: 1rem;
+        }
+        .track-list li {
+            padding: 0.3rem 0;
+            font-weight: 400;
+            font-size: 0.95rem;
+        }
+
+        /* описание оркестра с цитатой Times Italic */
+        .orchestra-description {
+            background: var(--light-bg);
+            border-radius: 40px 40px 0 0;
+        }
+        .desc-text {
+            font-size: 1.2rem;
+            font-weight: 400;
+            max-width: 900px;
+            margin-bottom: 2rem;
+        }
+        .desc-quote {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-weight: 600;
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            line-height: 1.3;
+            border-left: 5px solid var(--black);
+            padding-left: 2rem;
+            margin: 2.5rem 0;
+        }
+
+        /* видео-блок */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* горизонтальные отзывы */
+        .reviews-section {
+            background: var(--white);
+        }
+        .reviews-horizontal {
+            display: flex;
+            gap: 25px;
+            overflow-x: auto;
+            padding: 1rem 0 2rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .review-card {
+            flex: 0 0 300px;
+            background: var(--light-bg);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow);
+            scroll-snap-align: start;
+            border: 1px solid var(--border-light);
+        }
+        .review-text {
+            font-weight: 400;
+            font-style: italic;
+            margin-bottom: 1.2rem;
+            color: var(--text-dark);
+        }
+        .review-author {
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+
+        /* солисты */
+        .soloists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 30px;
+        }
+        .soloist-card {
+            text-align: center;
+        }
+        .soloist-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid var(--gray);
+            transition: 0.3s;
+        }
+        .soloist-card:hover .soloist-img {
+            border-color: var(--primary-red);
+        }
+        .soloist-name {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        .soloist-role {
+            font-weight: 400;
+            color: var(--text-medium);
+        }
+
+        /* футер (общая информация) */
+        footer {
+            background: var(--black);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 2.5rem;
+        }
+        .footer-col h4 {
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: var(--primary-red);
+        }
+        .footer-col p, .footer-col a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: 300;
+            display: block;
+            margin-bottom: 0.6rem;
+        }
+        .footer-col a:hover {
+            color: var(--primary-red);
+        }
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+        .social-icons a {
+            background: rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+        .social-icons a:hover {
+            background: var(--primary-red);
+        }
+        .copyright {
+            text-align: center;
+            border-top: 1px solid #333;
+            padding-top: 2rem;
+            font-weight: 300;
+            color: #aaa;
+        }
+
+        /* модальное окно (если нужно) - не используется, но оставим на будущее */
+        .modal {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 400px;
+        }
+
+        /* кнопка в хедере "купить билет" для мобильных */
+        .header-ticket {
+            background: var(--primary-red);
+            color: white;
+            border-radius: 30px;
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        @media (max-width: 480px) {
+            .logo { font-size: 1.2rem; }
+            .header-ticket { font-size: 0.8rem; padding: 0.3rem 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">ОРКЕСТР <span>ЧИРКОВА</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#concerts">Афиша</a></li>
+                    <li><a href="#about">Оркестр</a></li>
+                    <li><a href="#soloists">Солисты</a></li>
+                    <li><a href="#contacts">Контакты</a></li>
+                </ul>
+            </nav>
+            <a href="#" class="header-ticket" onclick="alert('Переход к покупке билетов')">Купить билет</a>
+            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Hero с крупной картинкой и кнопкой -->
+    <section class="hero">
+        <div class="hero-overlay">
+            <h1 class="hero-title">ОРКЕСТР <span>ДМИТРИЯ ЧИРКОВА</span></h1>
+            <div class="hero-sub">Главный музыкальный проект столицы</div>
+            <a href="#" class="btn-primary" onclick="alert('Билеты на ближайший концерт')">КУПИТЬ БИЛЕТ</a>
+        </div>
+    </section>
+
+    <!-- Ближайшие концерты (афиша) -->
+    <section id="concerts" class="container">
+        <h2 class="section-title">Ближайшие концерты</h2>
+        <div class="concerts-grid" id="concertsGrid">
+            <!-- карточки будут динамические через JS, но для демо пропишем вёрсткой -->
+        </div>
+    </section>
+
+    <!-- Крутое описание оркестра -->
+    <section id="about" class="orchestra-description">
+        <div class="container">
+            <h2 class="section-title">Оркестр, который звучит в сердце</h2>
+            <div class="desc-text">
+                <p>Оркестр Дмитрия Чиркова — это энергичный коллектив, объединяющий виртуозных музыкантов. Мы играем симфонический рок, саундтреки и авторские сочинения. Каждое выступление — шоу, которое запоминается навсегда.</p>
+            </div>
+            <div class="desc-quote">
+                «Музыка должна трогать душу, а не просто звучать»
+            </div>
+            <p style="font-weight: 400;">За 10 лет мы дали более 500 концертов по всей России, собирая полные залы. Наш стиль — эмоциональность, драйв и высочайшее исполнительское мастерство.</p>
+        </div>
+    </section>
+
+    <!-- Видео с концерта -->
+    <section class="container">
+        <h2 class="section-title">Смотрите, как это было</h2>
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Концерт оркестра" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <!-- Отзывы горизонтальные -->
+    <section class="reviews-section">
+        <div class="container">
+            <h2 class="section-title">Отзывы слушателей</h2>
+            <div class="reviews-horizontal" id="reviewsContainer">
+                <!-- через JS заполним, но пока статика -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Солисты -->
+    <section id="soloists" class="container">
+        <h2 class="section-title">Солисты оркестра</h2>
+        <div class="soloists-grid" id="soloistsContainer"></div>
+    </section>
+
+    <!-- Общая информация (контакты) -->
+    <footer id="contacts">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Оркестр Дмитрия Чиркова</h4>
+                    <p>Главный офис: Москва, ул. Тверская, 7</p>
+                    <p>+7 (495) 123-45-67</p>
+                    <p>info@orchirkova.ru</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Менеджмент</h4>
+                    <p>Директор: Анна Смирнова</p>
+                    <p>a.smirnova@orchirkova.ru</p>
+                    <p>+7 (915) 987-65-43</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Социальные сети</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-vk"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Билеты</h4>
+                    <p><a href="#">Афиша</a></p>
+                    <p><a href="#">Абонементы</a></p>
+                    <p><a href="#">Подарочные сертификаты</a></p>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2025 Оркестр Дмитрия Чиркова. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Данные для карточек концертов
+        const concerts = [
+            {
+                id: 1,
+                date: "15 марта 2025, 19:00",
+                title: "Симфонический рок: Хиты века",
+                desc: "Легендарные рок-композиции в симфонической обработке. Гости: рок-солисты.",
+                img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1974&auto=format&fit=crop",
+                details: "В программе: Queen, Led Zeppelin, Deep Purple. Дирижёр — Дмитрий Чирков. Продолжительность 2 часа с антрактом.",
+                tracks: ["Bohemian Rhapsody", "Stairway to Heaven", "Smoke on the Water", "We Will Rock You"]
+            },
+            {
+                id: 2,
+                date: "22 марта 2025, 18:00",
+                title: "Саундтреки Голливуда",
+                desc: "Музыка из фильмов Интерстеллар, Пираты Карибского моря, Гарри Поттер.",
+                img: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=2070&auto=format&fit=crop",
+                details: "Оркестр и хор. Специальный гость — саксофонист. Премьера сюиты из 'Дюны'.",
+                tracks: ["Interstellar (Main Theme)", "He's a Pirate", "Hedwig's Theme", "Time (Inception)"]
+            },
+            {
+                id: 3,
+                date: "5 апреля 2025, 20:00",
+                title: "Музыка видеоигр",
+                desc: "The Witcher, Skyrim, The Last of Us, Final Fantasy в исполнении симфонического оркестра.",
+                img: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop",
+                details: "Мощное шоу с визуальным рядом. Впервые в программе — саундтрек Cyberpunk 2077.",
+                tracks: ["The Wolven Storm", "Dragonborn", "The Last of Us Theme", "One-Winged Angel"]
+            }
+        ];
+
+        // Отзывы
+        const reviews = [
+            { text: "Лучший концерт в моей жизни! Оркестр Чиркова заставил зал рыдать и аплодировать стоя.", author: "Екатерина, Москва" },
+            { text: "Невероятная энергетика! Спасибо за вечер, полный магии.", author: "Алексей, СПб" },
+            { text: "Потрясающее исполнение саундтреков. Дмитрий — гений!", author: "Ольга, Казань" },
+            { text: "Хожу уже четвёртый раз, каждый раз открываю что-то новое.", author: "Иван, Нижний Новгород" },
+            { text: "Очень крутое световое шоу и звук. Приду ещё!", author: "Мария, Екатеринбург" },
+        ];
+
+        // Солисты
+        const soloists = [
+            { name: "Дмитрий Чирков", role: "Художественный руководитель, дирижёр", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1974&auto=format&fit=crop" },
+            { name: "Анна Каренина", role: "Скрипка", img: "https://images.unsplash.com/photo-1494790108777-466d7ec2430c?q=80&w=1974&auto=format&fit=crop" },
+            { name: "Сергей Рахманинов (мл.)", role: "Пианист", img: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=1974&auto=format&fit=crop" },
+            { name: "Елена Образцова", role: "Вокал", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop" }
+        ];
+
+        // Функция отрисовки карточек концертов
+        function renderConcerts() {
+            const grid = document.getElementById('concertsGrid');
+            grid.innerHTML = '';
+            concerts.forEach((c, index) => {
+                const card = document.createElement('div');
+                card.className = 'concert-card';
+                card.innerHTML = `
+                    <img src="${c.img}" alt="${c.title}" class="concert-img">
+                    <div class="concert-content">
+                        <div class="concert-date">${c.date}</div>
+                        <div class="concert-title">${c.title}</div>
+                        <div class="concert-desc">${c.desc}</div>
+                        <div class="btn-group">
+                            <button class="btn-small solid buy-btn" data-id="${c.id}"><i class="fas fa-ticket-alt"></i> Купить билет</button>
+                            <button class="btn-small details-btn" data-id="${c.id}"><i class="fas fa-chevron-down"></i> Подробнее</button>
+                        </div>
+                    </div>
+                    <div class="concert-details" id="details-${c.id}">
+                        <div class="details-text">${c.details}</div>
+                        <strong>В программе:</strong>
+                        <ul class="track-list">
+                            ${c.tracks.map(t => `<li>🎵 ${t}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Обработчики кнопок "Подробнее"
+            document.querySelectorAll('.details-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = btn.dataset.id;
+                    const detailsDiv = document.getElementById(`details-${id}`);
+                    detailsDiv.classList.toggle('active');
+                    const icon = btn.querySelector('i');
+                    if (detailsDiv.classList.contains('active')) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
+            });
+
+            // Заглушка для кнопок купить билет
+            document.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', () => alert('Переход к покупке билетов'));
+            });
+        }
+
+        // Рендер отзывов
+        function renderReviews() {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = '';
+            reviews.forEach(r => {
+                const card = document.createElement('div');
+                card.className = 'review-card';
+                card.innerHTML = `
+                    <div class="review-text">“${r.text}”</div>
+                    <div class="review-author">${r.author}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Рендер солистов
+        function renderSoloists() {
+            const container = document.getElementById('soloistsContainer');
+            container.innerHTML = '';
+            soloists.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'soloist-card';
+                card.innerHTML = `
+                    <img src="${s.img}" alt="${s.name}" class="soloist-img">
+                    <div class="soloist-name">${s.name}</div>
+                    <div class="soloist-role">${s.role}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Мобильное меню
+        const menuToggle = document.getElementById('menuToggle');
+        const nav = document.querySelector('nav');
+        menuToggle.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            const icon = menuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+        // Закрыть меню при клике на ссылку
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            });
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            renderConcerts();
+            renderReviews();
+            renderSoloists();
+
+            // Плавная прокрутка
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') return;
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

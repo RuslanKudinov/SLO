@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Самый Лучший Оркестр | Дмитрий Чирков</title>
+    
+    <!-- Подключение шрифтов -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== ПЕРЕМЕННЫЕ И БАЗОВЫЕ НАСТРОЙКИ ===== */
+        :root {
+            --color-bg: #000000;
+            --color-card-bg: #121212;
+            --color-accent: #ef4130; /* Запрошенный красный акцент */
+            --color-accent-glow: rgba(239, 65, 48, 0.4);
+            --color-text: #ffffff;
+            --color-text-muted: #b3b3b3;
+
+            --font-main: 'Montserrat', Arial, sans-serif;
+            --font-accent: 'Times New Roman', Times, serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: var(--font-main);
+            font-weight: 400;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== ТИПОГРАФИКА И УТИЛИТЫ ===== */
+        h2, .section-title { font-weight: 700; font-size: 42px; line-height: 1.2; margin-bottom: 20px; }
+        p { font-size: 16px; line-height: 1.6; color: var(--color-text-muted); margin-bottom: 15px; }
+        
+        .caption { 
+            font-weight: 700; font-size: 12px; text-transform: uppercase; 
+            letter-spacing: 0.2em; color: var(--color-accent); display: block; margin-bottom: 10px;
+        }
+        
+        .italic-quote { font-family: var(--font-accent); font-style: italic; font-size: 24px; color: var(--color-text); }
+        .text-center { text-align: center; }
+
+        /* ===== КНОПКИ ===== */
+        .btn {
+            background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent);
+            padding: 14px 28px; font-family: var(--font-main); font-size: 13px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.3s ease;
+            border-radius: 2px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-glow { background: var(--color-accent); color: #fff; }
+        .btn-glow:hover { box-shadow: 0 0 25px var(--color-accent-glow); transform: translateY(-2px); }
+        .btn-outline:hover { background: rgba(239, 65, 48, 0.1); }
+
+        /* ===== АНИМАЦИИ ПРИ СКРОЛЛЕ ===== */
+        .reveal-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        .navbar {
+            position: fixed; top: 0; width: 100%; padding: 20px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease;
+        }
+        .brand { font-weight: 700; font-size: 24px; color: var(--color-text); text-decoration: none; letter-spacing: 2px; }
+        
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a {
+            color: var(--color-text); text-decoration: none; font-size: 13px; font-weight: 500;
+            text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--color-accent); }
+
+        /* Бургер меню для мобильных */
+        .burger { display: none; cursor: pointer; flex-direction: column; gap: 5px; z-index: 1001; }
+        .burger span { display: block; width: 25px; height: 2px; background: #fff; transition: 0.3s; }
+
+        @media (max-width: 900px) {
+            .burger { display: flex; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 100%; height: 100vh;
+                background: var(--color-bg); flex-direction: column; justify-content: center;
+                transition: 0.4s ease-in-out;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links a { font-size: 20px; }
+            .nav-cta { display: none; } /* Скрываем кнопку в шапке на мобильных, она будет в меню */
+            .burger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            .burger.active span:nth-child(2) { opacity: 0; }
+            .burger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        }
+
+        /* ===== ГЛАВНЫЙ ЭКРАН (КАРУСЕЛЬ) ===== */
+        .hero { position: relative; height: 100vh; overflow: hidden; }
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; padding-left: 10%;
+            opacity: 0; visibility: hidden; transition: opacity 1s ease, visibility 1s; z-index: 1;
+        }
+        .slide.active { opacity: 1; visibility: visible; z-index: 2; }
+        
+        .slide-bg {
+            position: absolute; inset: 0; background-size: cover; background-position: center;
+            transform: scale(1.05); transition: transform 8s ease-out; z-index: -1;
+        }
+        .slide.active .slide-bg { transform: scale(1); }
+        .slide::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%); z-index: 0;
+        }
+
+        .slide-content { position: relative; z-index: 2; max-width: 700px; transform: translateY(30px); transition: 0.8s ease 0.3s; }
+        .slide.active .slide-content { transform: translateY(0); }
+        
+        .slide h1 { font-size: 56px; font-weight: 700; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; }
+        .slide p { font-size: 18px; margin-bottom: 40px; }
+
+        .hero-actions { display: flex; gap: 15px; flex-wrap: wrap; }
+
+        /* Элементы управления каруселью */
+        .carousel-indicators { position: absolute; bottom: 40px; left: 10%; z-index: 10; display: flex; gap: 10px; }
+        .indicator { width: 40px; height: 3px; background: rgba(255,255,255,0.3); cursor: pointer; transition: 0.3s; }
+        .indicator.active { background: var(--color-accent); width: 60px; }
+
+        /* ===== АФИША И БИЛЕТЫ ===== */
+        .section-pad { padding: 100px 5%; }
+        .concert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 50px; }
+        
+        .concert-card { background: var(--color-card-bg); border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .concert-card:hover { transform: translateY(-5px); border-color: rgba(239, 65, 48, 0.3); }
+        
+        .card-img-wrap { height: 200px; overflow: hidden; position: relative; }
+        .card-img { width: 100%; height: 100%; background-size: cover; background-position: center; transition: 0.5s; }
+        .concert-card:hover .card-img { transform: scale(1.05); }
+        
+        .card-date {
+            position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            padding: 10px 15px; text-align: center; border-bottom: 2px solid var(--color-accent);
+        }
+        .card-date .day { font-size: 24px; font-weight: 700; color: #fff; display: block; line-height: 1; }
+        .card-date .month { font-size: 11px; text-transform: uppercase; color: var(--color-accent); }
+
+        .card-body { padding: 30px; }
+        .card-title { font-size: 22px; margin-bottom: 10px; color: #fff; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        /* ===== ПРО ОРКЕСТР И ДМИТРИЙ ЧИРКОВ ===== */
+        .split-section { display: flex; gap: 50px; align-items: center; margin-bottom: 100px; }
+        .split-section:last-child { margin-bottom: 0; }
+        .split-img { flex: 1; position: relative; }
+        .split-img img { width: 100%; height: auto; border: 1px solid rgba(255,255,255,0.1); filter: grayscale(20%); transition: 0.5s; }
+        .split-img:hover img { filter: grayscale(0%); }
+        .split-text { flex: 1; }
+
+        .chirkov-block { background: var(--color-card-bg); padding: 60px; border-left: 4px solid var(--color-accent); margin-top: -50px; position: relative; z-index: 2; margin-left: -50px;}
+
+        /* ===== КОРПОРАТИВЫ (АККОРДЕОН) ===== */
+        .corp-accordion { display: flex; height: 500px; gap: 15px; margin-top: 40px; }
+        .corp-panel {
+            flex: 1; position: relative; border-radius: 2px; overflow: hidden;
+            background-size: cover; background-position: center;
+            cursor: pointer; transition: flex 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .corp-panel::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%);
+        }
+        .corp-panel.active { flex: 4; }
+        
+        .corp-content {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px;
+            opacity: 0; transform: translateY(20px); transition: 0.4s ease; pointer-events: none;
+        }
+        .corp-panel.active .corp-content { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .corp-content h3 { font-size: 28px; color: #fff; margin-bottom: 10px; }
+        
+        .corp-title-vert {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%) rotate(-90deg);
+            transform-origin: left bottom; white-space: nowrap; font-weight: 700; font-size: 20px;
+            transition: 0.3s;
+        }
+        .corp-panel.active .corp-title-vert { opacity: 0; }
+
+        /* ===== МЕДИА / ГАЛЕРЕЯ ===== */
+        .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 40px; }
+        .media-item { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--color-card-bg); display: flex; align-items: center; justify-content: center;}
+        .media-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; }
+        .media-item:hover img { opacity: 1; transform: scale(1.05); }
+        .play-btn { position: absolute; width: 60px; height: 60px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; pointer-events: none;}
+        .play-btn::after { content: ''; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 15px solid #fff; margin-left: 5px;}
+
+        /* ===== ФОРМА И КОНТАКТЫ ===== */
+        .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .contact-form { background: var(--color-card-bg); padding: 40px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 15px; }
+        .contact-form input, .contact-form textarea {
+            width: 100%; padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; font-family: var(--font-main); outline: none; transition: 0.3s;
+        }
+        .contact-form input:focus, .contact-form textarea:focus { border-color: var(--color-accent); }
+        .social-links { display: flex; gap: 15px; margin-top: 20px; }
+        .social-links a { color: var(--color-text-muted); text-decoration: none; font-weight: 700; transition: 0.3s; }
+        .social-links a:hover { color: var(--color-accent); }
+
+        /* ===== ФУТЕР ===== */
+        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+
+        /* ===== МОДАЛЬНОЕ ОКНО ===== */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center; z-index: 2000;
+            opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--color-card-bg); padding: 40px; max-width: 450px; width: 90%; border: 1px solid var(--color-accent); position: relative; }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+
+        /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ (До 430px и планшеты) ===== */
+        @media (max-width: 768px) {
+            h2, .section-title { font-size: 32px; }
+            .slide h1 { font-size: 36px; }
+            .split-section { flex-direction: column; gap: 30px; margin-bottom: 60px; }
+            .chirkov-block { margin: 0; margin-top: -20px; padding: 30px; }
+            .contact-wrap { grid-template-columns: 1fr; }
+            
+            /* Превращаем аккордеон в стек для мобилок */
+            .corp-accordion { flex-direction: column; height: auto; gap: 20px; }
+            .corp-panel { height: 250px; flex: none !important; }
+            .corp-title-vert { display: none; }
+            .corp-content { opacity: 1; transform: none; pointer-events: auto; }
+            
+            .media-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 430px) {
+            .section-pad { padding: 60px 5%; }
+            .slide h1 { font-size: 28px; }
+            .hero-actions { flex-direction: column; width: 100%; }
+            .hero-actions .btn { width: 100%; }
+            .card-footer { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .card-footer .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ШАПКА -->
+    <header class="navbar">
+        <a href="#" class="brand">СЛО.</a>
+        <div class="burger"><span></span><span></span><span></span></div>
+        <nav class="nav-links">
+            <a href="#about">Оркестр</a>
+            <a href="#chirkov">Дмитрий Чирков</a>
+            <a href="#afisha">Афиша</a>
+            <a href="#corporate">Заказать</a>
+            <a href="#media">Медиа</a>
+            <a href="#contacts">Контакты</a>
+            <a href="#afisha" class="btn btn-glow nav-cta">Билеты</a>
+        </nav>
+    </header>
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <section class="hero">
+        <!-- Слайд 1 -->
+        <div class="slide active">
+            <!-- Плейсхолдер Unsplash: Концерт/Симфония -->
+            <div class="slide-bg" style="background-image: url('ORKESTR_MAIN_PHOTO2.jpg');"></div>
+            <div class="slide-content">
+                <span class="caption">Оркестр как событие</span>
+                <h1>Живые концерты<br>и мощные эмоции</h1>
+                <p>Оркестр под управлением Дмитрия Чиркова — музыкальный продукт с лицом, стилем и уникальной концепцией звучания.</p>
+                <div class="hero-actions">
+                    <a href="#afisha" class="btn btn-glow">Смотреть афишу</a>
+                    <a href="#corporate" class="btn btn-outline">Пригласить оркестр</a>
+                </div>
+            </div>
+        </div>
+        <!-- Слайд 2 -->
+        <div class="slide">
+            <!-- Плейсхолдер Unsplash: Рок/Свет -->
+            <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1507838153414-b4b713384a76?auto=format&fit=crop&q=80&w=1920');"></div>
+            <div class="slide-content">
+                <span class="caption">Симфонический рок</span>
+                <h1>Легендарные хиты<br>в новом масштабе</h1>
+                <p>Энергия стадионного рока и благородство классических инструментов на лучших площадках страны.</p>
+                <div class="hero-actions">
+                    <a href="#afisha" class="btn btn-glow">Купить билеты</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-indicators">
+            <div class="indicator active" data-index="0"></div>
+            <div class="indicator" data-index="1"></div>
+        </div>
+    </section>
+
+    <!-- АФИША -->
+    <section id="afisha" class="section-pad">
+        <div class="reveal-up">
+            <span class="caption">Ближайшие события</span>
+            <h2 class="section-title">Афиша концертов</h2>
+        </div>
+        
+        <div class="concert-grid reveal-up">
+            <!-- Карточка 1 -->
+            <div class="concert-card">
+                <div class="card-img-wrap">
+                    <div class="card-img" style="background-image: url('afisha1.jpg');"></div>
+                    <div class="card-date"><span class="day">12</span><span class="month">Апр</span></div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Симфония Рока</h3>
+                    <p>Эпичные хиты Linkin Park, Muse, Metallica в прочтении большого оркестра.</p>
+                    <div class="card-footer">
+                        <span>Москва • Крокус Сити</span>
+                        <button class="btn btn-glow buy-btn" data-title="Симфония Рока" data-info="12 Апреля, Москва">Билеты</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Карточка 2 -->
+            <div class="concert-card">
+                <div class="card-img-wrap">
+                    <div class="card-img" style="background-image: url('afisha2.jpg');"></div>
+                    <div class="card-date"><span class="day">28</span><span class="month">Ноя</span></div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Неоклассика при свечах</h3>
+                    <p>Орган, тысячи свечей и пронзительное соло музыкантов на фоне ночного города.</p>
+                    <div class="card-footer">
+                        <span>Питер • Ледовый Дворец</span>
+                        <button class="btn btn-glow buy-btn" data-title="Неоклассика при свечах" data-info="28 Ноября, Питер">Билеты</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Карточка 3 -->
+            <div class="concert-card">
+                <div class="card-img-wrap">
+                    <div class="card-img" style="background-image: url('afisha3.jpg');"></div>
+                    <div class="card-date"><span class="day">05</span><span class="month">Дек</span></div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Магия Кинематографа</h3>
+                    <p>Ханс Циммер и Джон Уильямс: саундтреки, которые пробирают до мурашек.</p>
+                    <div class="card-footer">
+                        <span>Казань • Kazan Expo</span>
+                        <button class="btn btn-glow buy-btn" data-title="Магия Кинематографа" data-info="05 Декабря, Казань">Билеты</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ОРКЕСТР И ДИРИЖЕР -->
+    <section id="about" class="section-pad" style="background: #080808;">
+        <!-- Оркестр -->
+        <div class="split-section reveal-up">
+            <div class="split-img">
+                <img src="ORKESTR_MAIN_PHOTO.jpg" alt="Оркестр СЛО">
+            </div>
+            <div class="split-text">
+                <span class="caption">Не просто оркестр</span>
+                <h2 class="section-title">Симфония без границ</h2>
+                <p>Мы не играем музыку для академических залов. Мы создаем шоу, где уровень исполнения сочетается с мощной визуальной подачей и эмоцией.</p>
+                <p>Наш репертуар — от стадионного рока и киномузыки до концептуальных тематических программ и частных мероприятий премиум-класса.</p>
+            </div>
+        </div>
+
+        <!-- Дмитрий Чирков (САМЫЙ ВАЖНЫЙ БЛОК) -->
+        <div id="chirkov" class="split-section reveal-up" style="flex-direction: row-reverse;">
+            <div class="split-img">
+                <img src="dima.jpg" alt="Дирижер Дмитрий Чирков">
+            </div>
+            <div class="split-text">
+                <div class="chirkov-block">
+                    <span class="caption">Художественный лидер</span>
+                    <h2 class="section-title" style="font-size: 32px;">Дмитрий Чирков</h2>
+                    <p class="italic-quote">«Каждый звук должен пробирать до мурашек. Если этого нет, значит мы недоработали»</p>
+                    <p style="margin-top: 20px;">Дирижёр, формирующий уникальное звучание коллектива. Его подход — это высочайший профессионализм (академическая база, сложные постановки) в сочетании с новаторским видением.</p>
+                    <p>Люди приходят не просто на концерт — они приходят на эмоцию, которую создает Дмитрий.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЗАКАЗАТЬ ОРКЕСТР -->
+    <section id="corporate" class="section-pad">
+        <div class="reveal-up text-center">
+            <span class="caption">Private & Corporate</span>
+            <h2 class="section-title">Пригласить оркестр</h2>
+            <p style="max-width: 600px; margin: 0 auto;">Адаптируем программу под масштаб вашего события: от камерного состава для гала-ужина до полного оркестра для форума или стадиона.</p>
+        </div>
+
+        <div class="corp-accordion reveal-up">
+            <!-- Панель 1 -->
+            <div class="corp-panel active" style="background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1000');">
+                <div class="corp-title-vert">Форматы</div>
+                <div class="corp-content">
+                    <h3>Любой масштаб</h3>
+                    <p>Камерный состав, джаз-бэнд или полный симфонический оркестр (до 80 человек).</p>
+                </div>
+            </div>
+            <!-- Панель 2 -->
+            <div class="corp-panel" style="background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1000');">
+                <div class="corp-title-vert">События</div>
+                <div class="corp-content">
+                    <h3>Для кого мы играем</h3>
+                    <p>Корпоративы топ-уровня, частные юбилеи, городские фестивали, сопровождение деловых форумов.</p>
+                </div>
+            </div>
+            <!-- Панель 3 -->
+            <div class="corp-panel" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1000');">
+                <div class="corp-title-vert">Организация</div>
+                <div class="corp-content">
+                    <h3>Решение «Под ключ»</h3>
+                    <p>Предоставляем технический райдер, звукорежиссуру и сценографию для идеального звучания.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- МЕДИА -->
+    <section id="media" class="section-pad" style="background: #080808;">
+        <div class="reveal-up">
+            <span class="caption">Смотреть и слушать</span>
+            <h2 class="section-title">Медиа</h2>
+        </div>
+        <div class="media-grid reveal-up">
+            
+            <div class="media-item">
+                <img src="afisha4.jpg" alt="Репетиция">
+                <!-- <div class="play-btn"></div> -->
+            </div>
+            <div class="media-item">
+    <video src="video.mp4" poster="afisha2.jpg" controls></video>
+</div>
+            <div class="media-item">
+                <img src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&w=600" alt="Выступление">
+                <!-- <div class="play-btn"></div> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- КОНТАКТЫ И ФОРМА -->
+    <section id="contacts" class="section-pad">
+        <div class="contact-wrap reveal-up">
+            <div>
+                <span class="caption">Свяжитесь с нами</span>
+                <h2 class="section-title">Оставить заявку</h2>
+                <p>Узнайте условия для вашего города или площадки. Наш менеджер поможет подобрать программу и рассчитает стоимость.</p>
+                
+                <div style="margin-top: 40px;">
+                    <p><strong>Email:</strong> booking@slo-orchestra.ru</p>
+                    <p><strong>Телефон:</strong> +7 (999) 123-45-67</p>
+                    
+                    <div class="social-links">
+                        <a href="https://t.me/orchestraBest" target="_blank">Telegram</a>
+                        <a href="https://vk.com/orchestra.best" target="_blank">ВКонтакте</a>
+                        <a href="https://youtube.com/@thebestorchestra" target="_blank">YouTube</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Форма заказа -->
+            <form class="contact-form" id="orderForm">
+                <input type="text" placeholder="Ваше имя" required>
+                <input type="tel" placeholder="Номер телефона" required>
+                <input type="text" placeholder="Город / Площадка">
+                <textarea rows="4" placeholder="Формат мероприятия и желаемые даты..."></textarea>
+                <button type="submit" class="btn btn-glow" style="width: 100%;">Отправить запрос</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ФУТЕР -->
+    <footer>
+        <p>&copy; 2026 Оркестр под управлением Дмитрия Чиркова. Все права защищены.</p>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО ПОКУПКИ БИЛЕТОВ -->
+    <div class="modal" id="ticketModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <span class="caption">Оформление билета</span>
+            <h2 id="modalTitle" style="font-size: 24px;">Название</h2>
+            <p id="modalInfo" style="color: var(--color-accent); margin-bottom: 20px;">Детали</p>
+            
+            <form class="contact-form" id="ticketForm" style="padding: 0; border: none; background: transparent;">
+                <input type="text" placeholder="Имя Фамилия" required>
+                <input type="email" placeholder="Email для получения билета" required>
+                <button type="submit" class="btn btn-glow" style="width: 100%;">Оплатить</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- СКРИПТЫ -->
+    <script>
+        // Бургер меню
+        const burger = document.querySelector('.burger');
+        const navLinks = document.querySelector('.nav-links');
+        const navItems = document.querySelectorAll('.nav-links a');
+
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            burger.classList.toggle('active');
+        });
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                burger.classList.remove('active');
+            });
+        });
+
+        // Смена фона шапки при скролле
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(0, 0, 0, 0.95)';
+                navbar.style.padding = '15px 5%';
+            } else {
+                navbar.style.background = 'rgba(0, 0, 0, 0.8)';
+                navbar.style.padding = '20px 5%';
+            }
+        });
+
+        // Анимация при скролле (Intersection Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
+
+        // Слайдер (Карусель) Главного экрана
+        const slides = document.querySelectorAll('.slide');
+        const indicators = document.querySelectorAll('.indicator');
+        let currentSlide = 0;
+        let slideInterval;
+
+        function showSlide(index) {
+            slides.forEach(s => s.classList.remove('active'));
+            indicators.forEach(i => i.classList.remove('active'));
+            
+            currentSlide = (index + slides.length) % slides.length;
+            
+            slides[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.add('active');
+        }
+
+        function startSlider() {
+            slideInterval = setInterval(() => { showSlide(currentSlide + 1); }, 6000);
+        }
+
+        indicators.forEach(ind => {
+            ind.addEventListener('click', function() {
+                clearInterval(slideInterval);
+                showSlide(parseInt(this.dataset.index));
+                startSlider();
+            });
+        });
+        startSlider();
+
+        // Аккордеон (Корпоративы)
+        const panels = document.querySelectorAll('.corp-panel');
+        panels.forEach(panel => {
+            panel.addEventListener('click', () => {
+                // На десктопе работает как аккордеон, на мобилке клик не нужен (CSS стек)
+                if (window.innerWidth > 768) {
+                    panels.forEach(p => p.classList.remove('active'));
+                    panel.classList.add('active');
+                }
+            });
+        });
+
+        // Модальное окно билетов
+        const modal = document.getElementById('ticketModal');
+        const btns = document.querySelectorAll('.buy-btn');
+        const closeBtn = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalInfo = document.getElementById('modalInfo');
+
+        btns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                modalTitle.textContent = btn.getAttribute('data-title');
+                modalInfo.textContent = btn.getAttribute('data-info');
+                modal.classList.add('active');
+            });
+        });
+
+        closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('active');
+        });
+
+        // Обработка отправки форм (Заглушка без бэкенда)
+        document.getElementById('orderForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Спасибо! Заявка на выступление оркестра отправлена. Наш менеджер скоро свяжется с вами.');
+            e.target.reset();
+        });
+
+        document.getElementById('ticketForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Перенаправление на шлюз оплаты... (Тестовый режим)');
+            modal.classList.remove('active');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>

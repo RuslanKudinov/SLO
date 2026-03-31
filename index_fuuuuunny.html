@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Оркестр Дмитрия Чиркова | Живая музыка высшего уровня</title>
+    <!-- Основные шрифты: Montserrat, Arial, Times (итальянский акцидент) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Цветовая схема заказчика */
+        :root {
+            --black: #000000;
+            --red-accent: #ef4130;
+            --gray-light: #b3b3b3;
+            --white: #ffffff;
+            --dark-bg: #0a0a0a;
+            --card-bg: #111111;
+            --border-dim: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            font-family: 'Montserrat', 'Arial', sans-serif;
+            font-weight: 400;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Типографика */
+        h1, h2, h3, .heading-bold {
+            font-family: 'Montserrat', 'Arial', sans-serif;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .subheading {
+            font-family: 'Montserrat', 'Arial', sans-serif;
+            font-weight: 500;
+        }
+        .body-text {
+            font-family: 'Montserrat', 'Arial', sans-serif;
+            font-weight: 400;
+            color: var(--gray-light);
+        }
+        .accent-italic {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-weight: 500;
+            color: var(--red-accent);
+        }
+        .caption-sm {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--red-accent);
+        }
+
+        /* Общие стили */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--border-dim);
+        }
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: transparent;
+            border: 1.5px solid var(--red-accent);
+            padding: 14px 32px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--white);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 0;
+        }
+        .btn-primary {
+            background: var(--red-accent);
+            color: var(--black);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: #ff5a48;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(239, 65, 48, 0.3);
+        }
+        .btn-outline:hover {
+            background: var(--red-accent);
+            color: var(--black);
+            border-color: var(--red-accent);
+        }
+        .grid-2cols {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        @media (max-width: 768px) {
+            .grid-2cols {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* Меню-бургер (мобильная навигация) */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 5%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(239,65,48,0.3);
+            transition: 0.3s;
+        }
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            color: white;
+            text-decoration: none;
+        }
+        .logo span {
+            color: var(--red-accent);
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--red-accent);
+        }
+        .burger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .burger div {
+            width: 28px;
+            height: 2px;
+            background: white;
+            transition: 0.3s;
+        }
+        @media (max-width: 900px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                flex-direction: column;
+                background: #000000dd;
+                backdrop-filter: blur(16px);
+                width: 70%;
+                height: 100vh;
+                padding: 40px 30px;
+                gap: 30px;
+                transition: 0.4s;
+                border-left: 1px solid var(--red-accent);
+            }
+            .nav-links.active {
+                right: 0;
+            }
+            .burger {
+                display: flex;
+            }
+        }
+
+        /* HERO - первый экран с продающей структурой */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, #000000 0%, #1a0a08 100%);
+            padding: 120px 5% 80px;
+        }
+        .hero-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+            z-index: 0;
+            filter: grayscale(0.6);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+        .hero-tag {
+            font-size: 0.8rem;
+            color: var(--red-accent);
+            margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .hero h1 i {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            color: var(--red-accent);
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 550px) {
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+            .hero-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        /* Ближайшие концерты */
+        .concerts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .concert-card {
+            background: var(--card-bg);
+            border: 1px solid #2a2a2a;
+            transition: 0.3s;
+        }
+        .concert-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--red-accent);
+        }
+        .concert-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        .concert-date-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.8);
+            padding: 8px 14px;
+            text-align: center;
+            border-left: 3px solid var(--red-accent);
+        }
+        .concert-date-badge .day {
+            font-size: 1.4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .concert-info {
+            padding: 24px;
+        }
+        .concert-city {
+            font-size: 0.8rem;
+            color: var(--gray-light);
+            margin: 8px 0;
+        }
+        .btn-ticket {
+            margin-top: 20px;
+            background: transparent;
+            border: 1px solid var(--red-accent);
+            padding: 10px 20px;
+            font-size: 0.7rem;
+        }
+
+        /* блок Дмитрий Чирков (центр доверия) */
+        .maestro-section {
+            background: linear-gradient(145deg, #050505, #0f0f0f);
+        }
+        .maestro-flex {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+        .maestro-img {
+            flex: 1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .maestro-img img {
+            width: 100%;
+            filter: grayscale(0.2);
+            transition: 0.5s;
+        }
+        .maestro-quote {
+            font-size: 1.6rem;
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            color: var(--red-accent);
+            margin: 20px 0;
+        }
+        @media (max-width: 768px) {
+            .maestro-flex {
+                flex-direction: column;
+            }
+        }
+
+        /* Видео блок (обязательно) */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            margin: 40px 0;
+        }
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        /* Услуги (что делаем) */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        .service-item {
+            padding: 30px 20px;
+            background: #0c0c0c;
+            border: 1px solid #222;
+        }
+
+        /* форма заявки на главной */
+        .form-card {
+            background: #111;
+            padding: 40px;
+            border: 1px solid #2a2a2a;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        /* Афиша (полная страница) */
+        .afisha-hero {
+            background: #000;
+            padding: 120px 5% 60px;
+        }
+
+        /* подвал */
+        footer {
+            background: #020202;
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid var(--red-accent);
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        .social-links a {
+            color: var(--gray-light);
+            text-decoration: none;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: #111;
+            max-width: 500px;
+            width: 90%;
+            padding: 30px;
+            border-top: 4px solid var(--red-accent);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="#" class="logo">ОРКЕСТР<span>ЧИРКОВА</span></a>
+    <div class="burger" id="burgerBtn">
+        <div></div><div></div><div></div>
+    </div>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#main">Главная</a></li>
+        <li><a href="#afisha-page">Афиша</a></li>
+        <li><a href="#orchestra">Оркестр</a></li>
+        <li><a href="#dmitry">Дмитрий Чирков</a></li>
+        <li><a href="#order">Заказать оркестр</a></li>
+        <li><a href="#media">Медиа</a></li>
+        <li><a href="#contacts-footer">Контакты</a></li>
+    </ul>
+</nav>
+
+<!-- ГЛАВНАЯ СТРАНИЦА (продающая витрина) -->
+<section id="main" class="hero">
+    <div class="hero-bg-img" style="background-image: url('https://placehold.co/1600x900/2a2a2a/ef4130?text=ORKESTR_MAIN_PHOTO2.jpg'); background-size: cover; background-position: center 30%;"></div>
+    <div class="hero-content">
+        <div class="hero-tag">ОРКЕСТР ПОД УПРАВЛЕНИЕМ</div>
+        <h1>ДМИТРИЯ ЧИРКОВА<br><i>Живые концерты</i> и музыкальные программы</h1>
+        <p class="body-text" style="font-size: 1.1rem; margin: 20px 0;">Эмоция, стиль, безупречный уровень. Для зрителя и для события.</p>
+        <div class="hero-buttons">
+            <a href="#afisha-page" class="btn btn-primary">Афиша</a>
+            <a href="#order" class="btn btn-outline">Заказать выступление</a>
+        </div>
+    </div>
+</section>
+
+<!-- 1. Ближайшие концерты (3-5 событий) -->
+<section id="afisha-page" style="scroll-margin-top: 90px;">
+    <div class="container">
+        <span class="caption-sm">События</span>
+        <h2 style="font-size: 2.5rem;">Ближайшие концерты</h2>
+        <div class="concerts-grid" id="concertsContainer"></div>
+    </div>
+</section>
+
+<!-- 2. Коротко про оркестр: стиль, программы, отличие -->
+<section id="orchestra">
+    <div class="container">
+        <div class="grid-2cols">
+            <div>
+                <span class="caption-sm">Оркестр как событие</span>
+                <h2 style="font-size: 2.2rem;">Музыкальный продукт с лицом</h2>
+                <p class="body-text" style="margin: 20px 0;">Мы — оркестр, который разрушает шаблоны. Симфонический состав + современные аранжировки. От барокко до рока, от кинематографа до эксклюзивных премьер. Каждая программа — авторский замысел.</p>
+                <p class="body-text"><strong>Отличие:</strong> живой диалог с залом, визуальная драматургия и неповторимый почерк Дмитрия Чиркова.</p>
+            </div>
+            <div class="services-grid" style="grid-template-columns:1fr 1fr; gap:20px;">
+                <div class="service-item">🎭 Тематические проекты</div>
+                <div class="service-item">🎻 Камерные & симфонические форматы</div>
+                <div class="service-item">🌍 Гастрольные туры</div>
+                <div class="service-item">✨ Сопровождение мероприятий</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3. Дмитрий Чирков (Центр доверия) -->
+<section id="dmitry" class="maestro-section">
+    <div class="container">
+        <div class="maestro-flex">
+            <div class="maestro-img">
+                <img src="https://placehold.co/600x800/1a1a1a/ef4130?text=dima.jpg" alt="Дмитрий Чирков">
+            </div>
+            <div>
+                <span class="caption-sm">Художественный лидер</span>
+                <h2 style="font-size: 2rem;">Дмитрий Чирков</h2>
+                <div class="maestro-quote">«Дирижёр, формирующий звучание оркестра как живой диалог с публикой»</div>
+                <p class="body-text">Образование: Московская консерватория, стажировки в Европе. Работал с ведущими солистами и оркестрами. Его подход — глубокая эмоциональная интерпретация и смелые эксперименты. Дмитрий не просто управляет оркестром, он создаёт новую музыкальную реальность.</p>
+                <p class="body-text" style="margin-top: 15px;"><strong>Художественная позиция:</strong> «Музыка должна быть искренней, рискованной и объединяющей. Каждый концерт — это уникальный опыт».</p>
+                <a href="#afisha-page" class="btn btn-outline" style="margin-top: 25px;">Смотреть концерты →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Видео (обязательно) -->
+<section id="media">
+    <div class="container">
+        <span class="caption-sm">Живое выступление</span>
+        <h2>Ощутите атмосферу</h2>
+        <div class="video-wrapper">
+            <video controls poster="https://placehold.co/1280x720/000/ef4130?text=video-preview">
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                Ваш браузер не поддерживает видео. (В реальном проекте: video.mp4)
+            </video>
+        </div>
+        <p class="body-text" style="text-align:center;">Фрагмент концерта «Симфония страсти» — живой звук, свет и энергия оркестра.</p>
+    </div>
+</section>
+
+<!-- 5. Что вы делаете (набор услуг) -->
+<section>
+    <div class="container">
+        <div style="text-align:center; margin-bottom:40px;">
+            <span class="caption-sm">Форматы выступлений</span>
+            <h2>Музыка для любых событий</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-item"><strong>Концерты</strong><br>Открытые площадки, филармонии, стадионы</div>
+            <div class="service-item"><strong>Частные мероприятия</strong><br>Юбилеи, свадьбы, гала-ужины</div>
+            <div class="service-item"><strong>Фестивали</strong><br>Хедлайнеры и специальные гости</div>
+            <div class="service-item"><strong>Спецпрограммы</strong><br>Рок-симфо, киномузыка, авторские вечера</div>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Форма заявки на главной (продажа оркестра) -->
+<section id="order">
+    <div class="container">
+        <div class="form-card">
+            <span class="caption-sm">Пригласить оркестр</span>
+            <h2 style="margin: 15px 0;">Оставьте заявку</h2>
+            <p class="body-text">Ответим в течение 24 часов, обсудим формат, состав и детали мероприятия.</p>
+            <form id="mainRequestForm">
+                <div class="form-group"><input type="text" placeholder="Ваше имя" id="nameReq" required></div>
+                <div class="form-group"><input type="tel" placeholder="Телефон" id="phoneReq" required></div>
+                <div class="form-group"><input type="email" placeholder="Email" id="emailReq" required></div>
+                <div class="form-group"><textarea rows="3" placeholder="Тип мероприятия, дата, пожелания" id="msgReq"></textarea></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Отправить запрос</button>
+            </form>
+            <div id="formResult" style="margin-top: 15px; color:#ef4130;"></div>
+        </div>
+    </div>
+</section>
+
+<!-- СТРАНИЦА АФИШИ (детальная, каждый концерт - своя карточка с покупкой) -->
+<section id="full-afisha" style="background:#050505;">
+    <div class="container">
+        <span class="caption-sm">Полная афиша</span>
+        <h2>Все события сезона</h2>
+        <div id="detailedAfisha" class="concerts-grid"></div>
+    </div>
+</section>
+
+<!-- СТРАНИЦА: Заказать оркестр (коммерческий блок с преимуществами) -->
+<section style="background:#000;">
+    <div class="container">
+        <div class="grid-2cols">
+            <div>
+                <span class="caption-sm">Почему приглашают нас</span>
+                <h2>Ваше событие — наша музыка</h2>
+                <ul style="margin-top: 20px; list-style: none;">
+                    <li style="margin-bottom: 12px;">✓ Гибкие составы: от 12 музыкантов до полной симфонической группы</li>
+                    <li style="margin-bottom: 12px;">✓ Индивидуальные программы под бренд или тему мероприятия</li>
+                    <li style="margin-bottom: 12px;">✓ Организация «под ключ»: райдер, свет, звук, сценарий</li>
+                    <li style="margin-bottom: 12px;">✓ Опыт выступлений на корпоративах и форумах мирового уровня</li>
+                </ul>
+                <a href="#order" class="btn btn-primary" style="margin-top:20px;">Оставить заявку на выступление</a>
+            </div>
+            <div class="services-grid" style="grid-template-columns:1fr 1fr; gap:15px;">
+                <div class="service-item">🎤 Корпоративы<br><span style="font-size:12px;">имидж и статус</span></div>
+                <div class="service-item">🏛️ Частные вечера<br><span style="font-size:12px;">премиум-сервис</span></div>
+                <div class="service-item">🌍 Фестивали<br><span style="font-size:12px;">хедлайнеры</span></div>
+                <div class="service-item">📀 Запись и продакшн<br><span style="font-size:12px;">эксклюзив</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Медиа раздел с фото и видео галереей -->
+<section id="full-media">
+    <div class="container">
+        <span class="caption-sm">Медиа</span>
+        <h2>Фото и видео моменты</h2>
+        <div class="concerts-grid" style="grid-template-columns:repeat(auto-fill, minmax(280px,1fr));">
+            <div style="background:#111; height:220px; background-size:cover; background-position:center; background-image:url('https://placehold.co/600x400/222/ef4130?text=afisha1.jpg');"></div>
+            <div style="background:#111; height:220px; background-size:cover; background-image:url('https://placehold.co/600x400/333/ef4130?text=afisha2.jpg');"></div>
+            <div style="background:#111; height:220px; background-size:cover; background-image:url('https://placehold.co/600x400/444/ef4130?text=afisha3.jpg');"></div>
+            <div style="background:#111; height:220px; background-size:cover; background-image:url('https://placehold.co/600x400/555/ef4130?text=afisha4.jpg');"></div>
+        </div>
+        <div class="video-wrapper" style="margin-top:30px;">
+            <video controls poster="https://placehold.co/1280x720/000/ef4130?text=concert-teaser">
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+</section>
+
+<!-- КОНТАКТЫ + форма и мессенджеры -->
+<footer id="contacts-footer">
+    <div class="container">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px;">
+            <div>
+                <h3 style="font-size:1.4rem;">Свяжитесь с нами</h3>
+                <p><strong>Телефон:</strong> +7 (495) 123-45-67</p>
+                <p><strong>Email:</strong> hello@chirkov-orchestra.ru</p>
+                <p><strong>Для заявок:</strong> booking@chirkov-orchestra.ru</p>
+            </div>
+            <div>
+                <h3>Мессенджеры / Соцсети</h3>
+                <div class="social-links" style="justify-content: flex-start;">
+                    <a href="https://t.me/orchestraBest" target="_blank">Telegram</a>
+                    <a href="https://vk.com/orchestra.best" target="_blank">VK</a>
+                    <a href="https://youtube.com/@thebestorchestra" target="_blank">YouTube</a>
+                </div>
+            </div>
+            <div>
+                <form id="footerContactForm" style="display:flex; flex-direction:column; gap:10px; max-width:300px;">
+                    <input type="text" placeholder="Имя" id="footerName" style="background:#1a1a1a; border:1px solid #333; padding:10px; color:white;">
+                    <input type="email" placeholder="Email" id="footerEmail" style="background:#1a1a1a; border:1px solid #333; padding:10px; color:white;">
+                    <textarea placeholder="Сообщение" rows="2" id="footerMsg" style="background:#1a1a1a; border:1px solid #333; padding:10px;"></textarea>
+                    <button type="submit" class="btn btn-primary" style="padding:10px;">Отправить</button>
+                </form>
+            </div>
+        </div>
+        <hr style="border-color:#2a2a2a; margin:30px 0;">
+        <p style="color:#b3b3b3;">© 2025 Оркестр Дмитрия Чиркова — Живая музыка. Высокий статус. Эмоция.</p>
+    </div>
+</footer>
+
+<!-- Модальное окно для покупки билета -->
+<div id="ticketModal" class="modal">
+    <div class="modal-content">
+        <span style="float:right; cursor:pointer; font-size:24px;" id="closeModalBtn">&times;</span>
+        <h3 id="modalTitle">Купить билет</h3>
+        <p id="modalDetails"></p>
+        <form id="ticketForm">
+            <input type="text" placeholder="Ваше имя" required style="width:100%; margin:10px 0; padding:12px; background:#222; border:none; color:white;">
+            <input type="email" placeholder="Email для билетов" required style="width:100%; margin:10px 0; padding:12px; background:#222;">
+            <button type="submit" class="btn btn-primary" style="width:100%;">Оформить билет (2500₽)</button>
+        </form>
+        <p style="font-size:12px; margin-top:10px;">*Демо-оплата, после отправки вы получите письмо-подтверждение</p>
+    </div>
+</div>
+
+<script>
+    // Данные концертов (афиша + детали)
+    const concerts = [
+        { id:1, date:"12 Апреля 2026", city:"Москва", venue:"Крокус Сити Холл", program:"Симфония Рока", desc:"Легендарные хиты в симфонической обработке", img:"afisha1.jpg", time:"19:00" },
+        { id:2, date:"28 Мая 2026", city:"Санкт-Петербург", venue:"БКЗ Октябрьский", program:"Киномузыка Ханса Циммера", desc:"Грандиозное шоу с лазерным шоу", img:"afisha2.jpg", time:"20:00" },
+        { id:3, date:"15 Сентября 2026", city:"Казань", venue:"Kazan Expo", program:"Гала-концерт", desc:"Классика и современность", img:"afisha3.jpg", time:"19:30" },
+        { id:4, date:"5 Декабря 2026", city:"Екатеринбург", venue:"Космос Арена", program:"Рождественский концерт", desc:"Праздничная программа с участием хора", img:"afisha4.jpg", time:"18:00" }
+    ];
+
+    function renderConcerts(containerId, isFull=true) {
+        const container = document.getElementById(containerId);
+        if(!container) return;
+        container.innerHTML = concerts.map(c => `
+            <div class="concert-card">
+                <div class="concert-img" style="background-image: url('https://placehold.co/800x500/222/ef4130?text=${c.img}');">
+                    <div class="concert-date-badge"><span class="day">${c.date.slice(0,2)}</span><br>${c.date.slice(5)}</div>
+                </div>
+                <div class="concert-info">
+                    <h3>${c.program}</h3>
+                    <div class="concert-city">📍 ${c.city}, ${c.venue} | ${c.time}</div>
+                    <p class="body-text" style="font-size:0.85rem;">${c.desc}</p>
+                    <button class="btn btn-ticket buy-btn" data-title="${c.program}" data-info="${c.date} • ${c.city}, ${c.venue}">Купить билет</button>
+                    ${isFull ? `<button class="btn-outline" style="margin-top:10px; background:transparent; border:1px solid #ef4130; padding:8px 15px;">Подробнее</button>` : ''}
+                </div>
+            </div>
+        `).join('');
+        // привязываем модалку
+        document.querySelectorAll('.buy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const title = btn.getAttribute('data-title');
+                const info = btn.getAttribute('data-info');
+                document.getElementById('modalTitle').innerText = title;
+                document.getElementById('modalDetails').innerHTML = info;
+                document.getElementById('ticketModal').style.display = 'flex';
+            });
+        });
+    }
+
+    renderConcerts('concertsContainer', false);
+    renderConcerts('detailedAfisha', true);
+
+    // Бургер-меню
+    const burger = document.getElementById('burgerBtn');
+    const nav = document.getElementById('navLinks');
+    burger.addEventListener('click', () => {
+        nav.classList.toggle('active');
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => nav.classList.remove('active'));
+    });
+
+    // модальное окно закрытие
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+        document.getElementById('ticketModal').style.display = 'none';
+    });
+    window.onclick = function(e) {
+        const modal = document.getElementById('ticketModal');
+        if(e.target === modal) modal.style.display = 'none';
+    };
+
+    // обработка форм (имитация отправки, без бэкенда, но с уведомлением)
+    const mainForm = document.getElementById('mainRequestForm');
+    if(mainForm) {
+        mainForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('formResult').innerHTML = '✅ Заявка отправлена! Менеджер свяжется в ближайшее время.';
+            mainForm.reset();
+            setTimeout(() => document.getElementById('formResult').innerHTML = '', 4000);
+        });
+    }
+    const footerForm = document.getElementById('footerContactForm');
+    if(footerForm) {
+        footerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Сообщение получено! Мы ответим вам в ближайшее время.');
+            footerForm.reset();
+        });
+    }
+    const ticketForm = document.getElementById('ticketForm');
+    if(ticketForm) {
+        ticketForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Билет забронирован! Детали отправлены на email (демо-режим)');
+            document.getElementById('ticketModal').style.display = 'none';
+            ticketForm.reset();
+        });
+    }
+
+    // небольшая анимация плавного скролла
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if(targetId === "#") return;
+            const target = document.querySelector(targetId);
+            if(target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
+</body>
+</html>
